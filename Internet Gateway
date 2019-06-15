@@ -1,4 +1,4 @@
-nternet Gateway
+Internet Gateway
 An internet gateway is a resource that enables inbound and outbound traffic from the internet to your VPC.
 An internet gateway allows external users access to communicate with parts of your VPC.
 If you create a private VPC for an application that is internal to your company, you will not need an internet gateway.

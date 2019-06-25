@@ -4,6 +4,6 @@ Use create.sh to create stack, and update to update.
 
 network.yml creates network stack. It's parameters are defined in network.json.
 
-demoservers.yml creates servers stack, and it's parameters are defined in demoservers.yml 
+demoservers.yml creates servers stack, and it's parameters are defined in demoservers.json
 
 

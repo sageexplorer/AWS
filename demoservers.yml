@@ -55,11 +55,9 @@ Resources:
           apt-get install apache2 -y
           sudo systemctl start apache2.service
           cd /var/www/html
-          aws s3 cp s3://udacity-sage-webapp/index.html .
-          #unzip -o udacity-starter-website.zip
-          #cd udacity-starter-website
-          #mv index.html ../
-         # echo "It works!!! Udagrahmsss." > index.html
+          rm index.html
+          aws s3 cp s3://udacity-sage-webapp/udacity-starter-website.zip .
+          unzip -j udacity-starter-website.zip
       ImageId: ami-005bdb005fb00e791
       IamInstanceProfile: !Ref InstanceProfile
       SecurityGroups:

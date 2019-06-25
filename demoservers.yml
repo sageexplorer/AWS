@@ -25,14 +25,14 @@ Resources:
   WebServerSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
-      GroupDescription: Allow http to our host and SSH from local only
+      GroupDescription: Allow http to our host, and SSH from local only
       VpcId: 
         Fn::ImportValue:
           !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress: 
         - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 22
@@ -54,12 +54,14 @@ Resources:
           apt-get install unzip awscli -y
           apt-get install apache2 -y
           sudo systemctl start apache2.service
-          #cd /var/www/html
-          #aws s3 cp s3://udacity-website-sage/udacity-website-starter.zip .
-          #unzip -o udacity-website-starter.zip
-          echo "<html><body><h1>Awesome !!!</h1>\" > /var/www/html/index.html
+          cd /var/www/html
+          aws s3 cp s3://udacity-sage-webapp/index.html .
+          #unzip -o udacity-starter-website.zip
+          #cd udacity-starter-website
+          #mv index.html ../
+         # echo "It works!!! Udagrahmsss." > index.html
       ImageId: ami-005bdb005fb00e791
-      #IamInstanceProfile: !Ref ProfileWithRolesForOurApp
+      IamInstanceProfile: !Ref InstanceProfile
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: t3.small
@@ -67,6 +69,11 @@ Resources:
       - DeviceName: "/dev/sdk"
         Ebs:
           VolumeSize: '10'
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile 
+    Properties:
+      Path: "/"
+      Roles: []   
   WebAppGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -75,7 +82,7 @@ Resources:
           !Sub "${EnvironmentName}-PRIV-NETS"   
       LaunchConfigurationName:
         Ref: WebAppLaunchConfig
-      MinSize: '1'
+      MinSize: '4'
       MaxSize: '5'
       TargetGroupARNs:
       - Ref: WebAppTargetGroup
@@ -123,10 +130,9 @@ Resources:
       VpcId: 
         Fn::ImportValue:
           Fn::Sub: "${EnvironmentName}-VPCID"
-
 Outputs:
   VPC:
-    Description: A reference to the created VPC
+    Description: A reference to the created Load Balancer/ ELB URL 
     Value: !Join 
       - ''
       -
@@ -134,8 +140,5 @@ Outputs:
         -  !GetAtt WebAppLB.DNSName
     Export:
       Name: LBurl    
-
-    
-
 
     
